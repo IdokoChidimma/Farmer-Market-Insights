@@ -26,9 +26,13 @@
 ### 1. Data Preparation
 
 i. Created a new schema “farmer_market_insight
+
 ii. Imported and joined two primary datasets:
+
     * FarmerAdvisor (contains Farm_ID, Soil_pH, Soil_Moisture, Temperature_C, Rainfall_mm, Crop_Type, Fertilizer_Usage_kg, Pesticide_Usage_kg, Crop_Yield_ton, Sustainability_Score.
+    
     * MarketResearcher (contains Market_ID, Product, Market_Price_per_ton, Demand_Index, Supply_Index, Competitor_Price_per_ton, Economic_Indicator, Weather_Impact_Score,                       Seasonal_Factor, Consumer_Trend_Index.
+    
 iii. Ensured consistency in all columns, checked for null or missing values, and aligned crop types and farm ID accurate JOIN operations.    
 
 ### 2. Data Derivation
@@ -37,6 +41,7 @@ i. Location column (Districts):
 The main dataset did not include a direct Location or District column. Since the data lacks actual geotags or textural hints, so I assigned a location or district using CASE statement based on ranges of Farm_ID.
 
 * This was done using this logic
+  
       CASE
       WHEN Farm_ID BETWEEN 1 AND 2000 THEN ‘Location_1
       WHEN Farm_ID BETWEEN 2001 AND 4000 THEN ‘Location_2
@@ -45,15 +50,18 @@ The main dataset did not include a direct Location or District column. Since the
       ELSE ‘Location_5
       END AS Location
       FROM farmer_advisor_dataset;
+  
 * The same logic was applied to the market_researcher_dataset to allow interlinking. This allows for location-based insights.
   
   ii. PriceDate column: 
     There was no time-related PriceDate in the MarketResearcher dataset. To enable time series analysis and trend calculations I created a new PriceDate column by assigning synthetic         dates to each record.
     This was done using this logic:
+  
     ALTER TABLE market_researcher_dataset
     ADD COLUMN PriceDate DATE;
     UPDATE market_researcher_dataset
     SET PriceDate = DATE_SUB (‘2025-01-01’), INTERVAL Market_ID DAY);
+  
    Here, id represent the primary key, simulating daily interval from a base date (2025-01-01).
 
 iii. Advisor_ID:  
