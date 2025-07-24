@@ -31,7 +31,7 @@ ii. Imported and joined two primary datasets:
 
     * FarmerAdvisor (contains Farm_ID, Soil_pH, Soil_Moisture, Temperature_C, Rainfall_mm, Crop_Type, Fertilizer_Usage_kg, Pesticide_Usage_kg, Crop_Yield_ton, Sustainability_Score.
     
-    * MarketResearcher (contains Market_ID, Product, Market_Price_per_ton, Demand_Index, Supply_Index, Competitor_Price_per_ton, Economic_Indicator, Weather_Impact_Score,                       Seasonal_Factor, Consumer_Trend_Index.
+    * MarketResearcher (contains Market_ID, Product, Market_Price_per_ton, Demand_Index, Supply_Index, Competitor_Price_per_ton, Economic_Indicator, Weather_Impact_Score,     Seasonal_Factor, Consumer_Trend_Index.
     
 iii. Ensured consistency in all columns, checked for null or missing values, and aligned crop types and farm ID accurate JOIN operations.    
 
@@ -77,9 +77,12 @@ Since the dataset lacks an explicit season field, I derived it using temperature
 
 The classification was guided by common agronomic patterns:
 
-•	Dry season: characterized by high temperature and low rainfall.
+•	Dry season: characterized by high temperature and low rainfall
+
 •	Mid-season: Characterized by moderate temperature and rainfall
+
 •	Rainy season: Characterized by low temperature and rainfall.
+
 •	Unknown: Conditions that do not fit the above thresholds.
 
 I began by adding a new season column:
@@ -95,7 +98,14 @@ I began by adding a new season column:
                             WHEN Temperature <20 AND Rainfall >150 THEN ‘Rainy’
                             ELSE ‘Unknown’
                                END;
+                               
+### 3. Used SQL Techniques (CTEs, JOINS, Window Functions)
 
+•	CTEs (Common Table Expressions) This helps in breaking down complex logic into readable chunks. Example, AvgProfitPerCrop, HighGrowthRate, HighestPricePerDistricts.
+
+•	JOINs: interlinked rows across FarmerAdvisor and MarketResearcher for accurate analysis. joined tables using shared fields like Farm_ID, Crop_Type and location where applicable).
+
+•	Window Functions: Applied RANK (), ROW NUMBER (), DENSE_RANK ()) like: Ranking crops by market price per district, Finding the top and second-highest crop price per location, analyzing crop price trends over time (curated a PriceDate column).
 
 
 
