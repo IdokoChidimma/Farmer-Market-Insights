@@ -107,6 +107,7 @@ I began by adding a new season column:
 
 •	Window Functions: Applied RANK (), ROW NUMBER (), DENSE_RANK ()) like: Ranking crops by market price per district, Finding the top and second-highest crop price per location, analyzing crop price trends over time (curated a PriceDate column).
 
+
 # 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
   Here are some of the core findings based on key SQL questions:
   
@@ -134,21 +135,140 @@ Q2. For each crop type, calculate the average market price and sort in descendin
          GROUP BY 1
          ORDER BY 2 DESC;
          
- <img width="231" height="98" alt="2" src="https://github.com/user-attachments/assets/958358ca-5d97-4f38-ab44-ae69098adb74" />
+   <img width="231" height="98" alt="2" src="https://github.com/user-attachments/assets/958358ca-5d97-4f38-ab44-ae69098adb74" />
  
 Insights:
 The analysis shows that Rice with average market price of 300.840 incurred the highest average market price, followed by corn, soybeans, and wheat. This pricing trend highlights rice as the most valuable crop in the dataset, which indicate significant opportunity for increased farmer income where conditions support its cultivation.
+
 Recommendation
 •	Encourage farmers to diversify into higher-price crops where feasible.
 •	Provide price trend reports to help farmers time the sale of their produce.
 
 Q3. Count how many unique crops each farmer is associated with.
 
+      SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) AS Unique_Crops
+      FROM farmer_advisor_dataset
+      GROUP BY Farm_ID
+      ORDER BY Unique_Crops DESC;
+   <img width="165" height="254" alt="3" src="https://github.com/user-attachments/assets/a1e91ba2-d279-40f7-af7c-8a7a7ffa945e" />
+ 
 Insight:
-     No crop is uniquely associated with any single farmer. This means there’s a high overlap in crop choices, which lead to market saturation and price competition if supply excess demand.
-     Recommendation:
+ No crop is uniquely associated with any single farmer. This means there’s a high overlap in crop choices, which lead to market saturation and price competition if supply excess demand.
+     
+ Recommendation:
 •	Encourage farmers to grow crops that are in high demand locally or that they grow best, so they can earn more and face less competition.
 •	Provide training on multi-crop farming benefits.
+
+Q4. Find farmers who are growing more than 3 different types of crops.
+
+      SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) As Different_Crop
+      FROM farmer_advisor_dataset
+      GROUP BY Farm_ID
+      HAVING Different_Crop >3;
+<img width="191" height="133" alt="4" src="https://github.com/user-attachments/assets/be793dcf-4ee0-4300-b2f2-8681a0cc055d" />
+
+Insight:
+All farmers are associated with only one crop type, with no individual growing more than one variety. This indicates a lack of diversification, which creates several potential     risks and lower market price.
+
+Recommendation
+•	Introduce education campaigns and demonstration farms to show the benefits of intercropping and crop rotation.
+•	Develop localized crop planning guides for diversification.
+
+Q5. List all crops where the max and min market prices (from MarketResearcher) differ by more than ₹10 per kg.
+
+      SELECT market_researcher_dataset.Product AS Crop, 
+      MAX(market_researcher_dataset.Market_Price_per_ton)/ 1000 AS Max_Market_Price,
+      MIN(market_researcher_dataset.Market_Price_per_ton) / 1000 AS Min_Market_Price,
+      (MAX(market_researcher_dataset.Market_Price_per_ton) - MIN(market_researcher_dataset.Market_Price_per_ton)) / 1000 AS Price_Difference
+      FROM market_researcher_dataset
+      GROUP BY Crop
+      ORDER BY Price_Difference >= 10;
+   <img width="457" height="107" alt="5" src="https://github.com/user-attachments/assets/563276e3-e6e2-47c2-a772-702e5a8369b8" />
+ 
+ Insight:
+Market data indicates that Rice experiences the widest gap between the maximum and minimum market prices, signaling higher price volatility compared to other crops. Wheat, soybeans, and corn shows moderate price variations.
+
+Recommendation
+•	Introduce storage and processing solutions to reduce volatility.
+•	Provide price forecasting tools to farmers.
+
+Q6. Show all advisors who guide farmers growing the same crop in different districts.
+
+            SELECT farmer_advisor_dataset.Farm_ID, farmer_advisor_dataset.Advisor_ID, COUNT(DISTINCT Crop_Type) AS Crop_Count
+            FROM farmer_advisor_dataset
+            GROUP BY Farm_ID, Advisor_ID
+            HAVING COUNT(DISTINCT Advisor_ID) = 1;
+   <img width="228" height="192" alt="6" src="https://github.com/user-attachments/assets/7ed96e1e-535d-4f12-8793-41abe584f196" />
+ 
+Insight:
+There is no evidence that all advisor guiding farmer grow the same crop in different districts. This reduces their ability to cope with farm problems like floods, pests or market drops.
+
+Recommendation:
+•	Encourage farmers to spread crop production across different locations to reduce the risk of total loss from local issues like pests, bad weather, or price decline.
+•	Build regional crop guides based on their insights.
+
+Q7. Rank crops by profit per unit (assume: market price - average cost from FarmerAdvisor) using RANK ().
+
+Insight:
+Based on profit per unit (assume: market price - average cost), rice ranks the highest (₹494.14), followed by wheat, corn and soybeans. This highlights rice as a high-value crop.
+
+Recommendation:
+•	Promote profitable crops via targeted advisory services: Support rice farming, while helping farmers adopt practices that reduce production risks.
+•	Encourage cost management strategies to improve margins.
+
+Q8. Identify locations where the current market price of a crop is more than 20% above the average price of that crop across all locations.
+
+Insight:
+No location recorded market prices exceeding 20% above the crop average price, indicating limited regional price advantage and possible lack market channel across zones.
+
+Recommendation:
+•	Support farmers near high-price markets with logistics solutions.
+•	Promote market-driven production planning.
+
+Q9. List farmers who have been assigned the same advisor for all their crops.
+Maintain continuity in advisory assignments for multi-crop farmers.
+
+Insight:
+All farmers are consistently linked to the same advisor across all crop records. This shows a stable advisory relationship, which strengthen trust and improved knowledge for a better farm performance.
+Recommendation:
+•	Introduce tailored support and long-term improvement.
+•	Evaluate advisor impact on multi-crop performance.
+
+Q10. Create a CTE showing average profit per crop type by farmer and use it to list farmers making below-average profits on any crop.
+
+Insight:
+Several farmers, including Farm_ID 3 (Corn), ID 6 (Rice), ID 2 (Soybean), and ID 1 (Wheat), are earning below average profits; 543,412, 569,472, 547,477, 532,110 respectively. These gaps highlight issues like low yield and market challenges.
+
+Recommendation:
+•	Offer targeted training or advisory sessions on low-profit crops.
+•	Investigate input cost inefficiencies or pricing issues.
+
+Q11. (Assume MarketResearcher has a PriceDate) — Use a window function to find the price change of each crop over the last 3 entries.
+
+Insight:
+Each crop has experienced modest but meaningful price increases:
+•	Corn price rose from 100.0710, 100.0858 to 100.1295, marking a +0.0584%. This indicates a relatively stable market with slight upward changes.
+•	Rice price climbed from moving from 100.2718, 100.3950 to 100.4308, indicating a +0.1589% increase, which may include heightened demand.
+•	Soybean increased from 100.0683, 100.16340 to 100.2554, translating to a +0.1871% rise.
+•	Wheat saw the highest shift 100.03762, 100.330225 to 100.5558 at a +0.5182% gain. This growth may reflect improved demand.
+
+Recommendation:
+•	Develop dashboards or SMS alerts for real-time price tracking.
+•	Help farmers time their sales using trend data.
+
+Q12. Create a new column that classifies crop growth rate as:
+    - Low (<20%)
+    - Medium (20–50%)
+    - High (>50%)
+Count the number of crops in each category.
+
+Insight:
+Crop growth rates are evenly distributed among Low, Medium, and High categories. This balance may indicate varied crop types, diverse growing conditions and advisory support across regions.
+Recommendation:
+•	Celebrate high-growth crops in campaigns to promote best practices.
+•	Investigate low-growth crops and intervene with soil tests, improved varieties, or irrigation.
+•	Promote successful techniques used in high-growth crops to other farming areas.
+
 
 
 
