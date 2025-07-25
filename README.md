@@ -1,10 +1,10 @@
 
 
-# INTRODUCTION
+## INTRODUCTION
 
    Agricultural extension specialist plays a vital role in serving as a bridging gap between agricultural research and farmers. They play a critical role in improving agricultural productivity, sustainability and rural development. Often time farmers face challenges like low yields, limited access to the markets, outdated farming methods, lack of modern technologies and facilities, climate adaption and soil health. This analysis helps to explore the relationship between agricultural production and market price trends using SQL based analysis. The focus is to uncover actionable insights by assessing crop profitability, market prices, crop yield evaluation across region by using a dataset containing FarmerAdvisor and MarketResearcher to support better data-driven decision making.
    
-# 🧾 OBJECTIVE
+## 🧾 OBJECTIVE
 
   The main objective of this project is to analyze farmer and market data to uncover patterns in price trends, crop profitability, and advisor relationship. 
   Specifically, the goal is to;
@@ -13,14 +13,14 @@
 3. Classification of crop based on growth performance.
 4. Observe how many farmers fall under each growth category.
 
-# 🛠 TOOLS USED
+## 🛠 TOOLS USED
 
 * Database: MySQL
 * CSV Files: Initial data sources.
 * Presentation and Report Tools: PowerPoint / Microsoft Word.
 * Data Cleaning: Derived missing fields using data analysis techniques like Data manipulation and logical grouping, Derived columns, CTEs, Window functions.
 
-# ✍  Methodology
+## ✍  Methodology
   The following steps and technique were applied to perform this analysis to generate insights for farmers and market researchers:
   
 ### 1. Data Preparation
@@ -108,7 +108,7 @@ I began by adding a new season column:
 •	Window Functions: Applied RANK (), ROW NUMBER (), DENSE_RANK ()) like: Ranking crops by market price per district, Finding the top and second-highest crop price per location, analyzing crop price trends over time (curated a PriceDate column).
 
 
-# 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
+## 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
   Here are some of the core findings based on key SQL questions:
   
 ### Q1. Find the top 5 locations where the maximum number of farmers are associated with advisors.
@@ -130,7 +130,7 @@ Recommendation:
 
 •	Consider price regulation policies to support farmers in disadvantaged locations.
 
-Q2. For each crop type, calculate the average market price and sort in descending order.
+### Q2. For each crop type, calculate the average market price and sort in descending order.
 
      SELECT market_researcher_dataset.Product AS Crop_Type, avg(market_researcher_dataset.Market_Price_per_ton) AS Average_Market_Price
          FROM market_researcher_dataset
@@ -149,7 +149,7 @@ Recommendation
 
 •	Provide price trend reports to help farmers time the sale of their produce.
 
-Q3. Count how many unique crops each farmer is associated with.
+### Q3. Count how many unique crops each farmer is associated with.
 
       SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) AS Unique_Crops
       FROM farmer_advisor_dataset
@@ -167,7 +167,7 @@ Insight:
 
 •	Provide training on multi-crop farming benefits.
 
-Q4. Find farmers who are growing more than 3 different types of crops.
+### Q4. Find farmers who are growing more than 3 different types of crops.
 
       SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) As Different_Crop
       FROM farmer_advisor_dataset
@@ -185,7 +185,7 @@ Recommendation
 
 •	Develop localized crop planning guides for diversification.
 
-Q5. List all crops where the max and min market prices (from MarketResearcher) differ by more than ₹10 per kg.
+### Q5. List all crops where the max and min market prices (from MarketResearcher) differ by more than ₹10 per kg.
 
       SELECT market_researcher_dataset.Product AS Crop, 
       MAX(market_researcher_dataset.Market_Price_per_ton)/ 1000 AS Max_Market_Price,
@@ -206,7 +206,7 @@ Recommendation
 
 •	Provide price forecasting tools to farmers.
 
-Q6. Show all advisors who guide farmers growing the same crop in different districts.
+### Q6. Show all advisors who guide farmers growing the same crop in different districts.
 
             SELECT farmer_advisor_dataset.Farm_ID, farmer_advisor_dataset.Advisor_ID, COUNT(DISTINCT Crop_Type) AS Crop_Count
             FROM farmer_advisor_dataset
@@ -224,7 +224,7 @@ Recommendation:
 
 * Build regional crop guides based on their insights.
 
-Q7. Rank crops by profit per unit (assume: market price - average cost from FarmerAdvisor) using RANK ().
+### Q7. Rank crops by profit per unit (assume: market price - average cost from FarmerAdvisor) using RANK ().
 
 Insight:
 
@@ -236,7 +236,7 @@ Recommendation:
   
 * Encourage cost management strategies to improve margins.
 
-Q8. Identify locations where the current market price of a crop is more than 20% above the average price of that crop across all locations.
+### Q8. Identify locations where the current market price of a crop is more than 20% above the average price of that crop across all locations.
 
     WITH Average_Price_Per_Crop AS  (
 	SELECT 
@@ -264,7 +264,7 @@ Recommendation:
 
 * Promote market-driven production planning.
 
-Q9. List farmers who have been assigned the same advisor for all their crops.
+### Q9. List farmers who have been assigned the same advisor for all their crops.
 
       SELECT farmer_advisor_dataset.Farm_ID
       FROM farmer_advisor_dataset
@@ -282,7 +282,7 @@ Recommendation:
   
 * Evaluate advisor impact on multi-crop performance.
 
-Q10. Create a CTE showing average profit per crop type by farmer and use it to list farmers making below-average profits on any crop.
+### Q10. Create a CTE showing average profit per crop type by farmer and use it to list farmers making below-average profits on any crop.
 
 Insight:
 Several farmers, including Farm_ID 3 (Corn), ID 6 (Rice), ID 2 (Soybean), and ID 1 (Wheat), are earning below average profits; 543,412, 569,472, 547,477, 532,110 respectively. These gaps highlight issues like low yield and market challenges.
@@ -291,7 +291,7 @@ Recommendation:
 •	Offer targeted training or advisory sessions on low-profit crops.
 •	Investigate input cost inefficiencies or pricing issues.
 
-Q11. (Assume MarketResearcher has a PriceDate) — Use a window function to find the price change of each crop over the last 3 entries.
+### Q11. (Assume MarketResearcher has a PriceDate) — Use a window function to find the price change of each crop over the last 3 entries.
 
 	WITH RankedPrices AS (		
 	        SELECT market_researcher_dataset.Product AS Product, market_researcher_dataset.PriceDate AS PriceDate, 
@@ -324,7 +324,7 @@ Recommendation:
 * Develop dashboards or SMS alerts for real-time price tracking.
 * Help farmers time their sales using trend data.
 
-Q12. Create a new column that classifies crop growth rate as:
+### Q12. Create a new column that classifies crop growth rate as:
     - Low (<20%)
     - Medium (20–50%)
     - High (>50%)
@@ -363,7 +363,7 @@ Recommendation:
 * Promote successful techniques used in high-growth crops to other farming areas.
 
 
-Q13. Join the tables and display all farmers whose crop is sold in the same district at the highest price.
+### Q13. Join the tables and display all farmers whose crop is sold in the same district at the highest price.
 
 		    market_researcher_dataset.Location AS Location,
 		    MAX(market_researcher_dataset.Market_Price_per_ton) AS Max_Price
@@ -387,7 +387,7 @@ Recommendation:
 * Identify and replicate their selling strategies.
 * Promote better aggregation or storage options for others.
 
-Q14. For each advisor, count how many of their farmers grow crops that fall under the “High” growth classification (from Q12).
+### Q14. For each advisor, count how many of their farmers grow crops that fall under the “High” growth classification (from Q12).
 
 		WITH GrowthRates AS (
 			SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, farmer_advisor_dataset.Crop_Type, farmer_advisor_dataset.Crop_Yield_ton,
@@ -419,7 +419,7 @@ Recommendation:
   
 * Assign underperforming farmers to these high-impact advisors.
 
-Q15. Identify if any farmer has duplicate crop entries.
+### Q15. Identify if any farmer has duplicate crop entries.
       
       SELECT farmer_advisor_dataset.Farm_ID AS Farmer_ID, farmer_advisor_dataset.Crop_Type AS Crop_Type,
       COUNT(*) AS Duplicate_count
@@ -439,7 +439,7 @@ Recommendation:
   
 * Maintain regular data validation checks to ensure accuracy as new records are imputed.
 
-Q16. List all crops grown by farmers that are not listed in the MarketResearcher table.
+### Q16. List all crops grown by farmers that are not listed in the MarketResearcher table.
 
       SELECT DISTINCT farmer_advisor_dataset.Crop_Type AS Crop_Type
       FROM farmer_advisor_dataset
@@ -458,7 +458,7 @@ Recommendation:
 •	Expand market research coverage to include these crops.
 •	Educate farmers on marketability before large-scale planting.
 
-Q17. For each crop, determine which location has the highest average profit margin.
+### Q17. For each crop, determine which location has the highest average profit margin.
 
       WITH Profit AS (
       SELECT farmer_advisor_dataset.Crop_Type AS Crop, market_researcher_dataset.Location AS Location, 
@@ -488,7 +488,7 @@ Recommendation:
 
 * Promote crop zoning and suitability mapping.
 
-Q18. Use window functions to find the second-highest market price crop per district.
+### Q18. Use window functions to find the second-highest market price crop per district.
 
       SELECT *
       FROM (
@@ -512,7 +512,7 @@ Recommendation:
   
 * Promote awareness of local market gaps for such crops.
 
-Q19. List all advisors associated with more than 5 distinct crop types.
+### Q19. List all advisors associated with more than 5 distinct crop types.
 
       SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) AS Distinct_crop_Type
       FROM farmer_advisor_dataset
@@ -529,7 +529,7 @@ Recommendation:
 
 * Use their knowledge to develop multi-crop advisory materials.
 
-Q20. Find farmers who consistently grow the same crop type for all season (assume a Season column exists or mock one for the exercise).
+### Q20. Find farmers who consistently grow the same crop type for all season (assume a Season column exists or mock one for the exercise).
 
       SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, COUNT(DISTINCT farmer_advisor_dataset.Crop_Type) As Crop_Type
       FROM farmer_advisor_dataset
@@ -550,9 +550,9 @@ Recommendation:
 
 * Provide incentives to shift toward multi-season cropping.
 
-# FINAL RECOMMENDATIONS
+## FINAL RECOMMENDATIONS
 
-# 1.	Deploy agricultural extension practitioner
+### 1.	Deploy agricultural extension practitioner
 
 * Extension agents conduct individual or group farm visits to asses on site challenges and offer appropriate recommendations suited for soil conditions, farming methods, and specific crops.
 
@@ -560,7 +560,7 @@ Recommendation:
 
 * They organize training sessions, field demonstration, and workshops to equip farmers with modern technique such as pest control, improved seed usage.
 
-# 2.	Crop Rotation Education
+### 2.	Crop Rotation Education
 
 One of the key strategies for enhancing sustainable agricultural practices is the promotion of crop rotation education among farmers. Repeated growing of the same crop exhausts specific soil nutrients. Educating farmers helps them understand how alternating crops like leguminous crops can naturally replenish the soil.
 
@@ -572,7 +572,7 @@ Proposed Actions:
 
 * It increases farm resilience to climate variability, helping farmers adapt to environmental changes.
 
-# 3.	Diversification of crop
+### 3.	Diversification of crop
 
 The adoption of crop diversification significant impact on the roles and responsibilities of both farmer advisor and market researcher., because overreliance on a particular crop type may lead to significant risk from crop failure, and decline market price. As farmers move towards cultivating a wide variety of crops the roles because even more critical in ensuring successful production and informed decision making.
 
@@ -586,7 +586,7 @@ Proposed Actions:
 
 * Offer small grants, farming support, or advice to farmers who want to try new crops or different planting methods.
 
-# 4.	Encourage data collection
+### 4.	Encourage data collection
 
 Consistent and organized data collection on crop performance, market dynamics and soil health are essential for informed evidence-based decisions by both farmers and market researcher.
 
@@ -598,7 +598,7 @@ Proposed Actions:
 
 * Equip farmer advisors and researchers with mobile tools and education for data collections.
 
-# 5.	Promote innovation and sustainability
+### 5.	Promote innovation and sustainability
 
 Encouraging innovation through the introduction of new crops, improved varieties, and sustainable practices fosters resilience in the face of climate change.
 
@@ -608,7 +608,7 @@ Proposed Actions:
 
 * Promote incentives for early adopters of sustainable practices, such as certification and access to premium markets.
 
-# CHALLENGES FACED
+## CHALLENGES FACED
 
 1. Missing Key Columns: The dataset lacked essential fields like Location, Season, Advisor_ID, and PriceDate, which made direct analysis impossible. I had to manipulate these columns using assumptions, proxies, and logical inferences.
    
@@ -616,11 +616,11 @@ Proposed Actions:
    
 3. Unrealistic Date Values: The PriceDate field contained future years like 2036-2049. I resolved this by generating realistic sequential dates using ROW_NUMBER () and DATE_SUB () from a 2024 baseline.
    
-# SUMMARY
+## SUMMARY
 
 This analysis explored 20 focused data queries on farmer practices, advisor support, crop diversity, and market dynamics. The results highlight important patterns regions with high advisor engagement tend to have better farmer outcomes, while crop diversification links closely to higher profits and resilience. Price fluctuations in key crops suggest a need for better market intelligence. Some farmers maintain consistent advisory relationships, boosting performance, but data inconsistencies remain a concern. Overall, the insights point to the growing importance of reliable data, targeted advisory services, and informed crop planning in building a more efficient and responsive agricultural system.
 
-# CONCLUSION
+## CONCLUSION
 
 Improving agricultural outcomes requires strengthening farmerAdvisor relationships, promoting crop rotation and diversification, and using real-time data. High value crops offer profits but need market access strategies to avoid risk. Filling data gaps and expanding advisory services will support smarter, evidence-based planning. With coordinated action across policy, technology, and local engagement, farmers can achieve better yields, reduced risk, and sustainable livelihoods in a rapidly changing agricultural landscape.
 
