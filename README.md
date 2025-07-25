@@ -4,7 +4,7 @@
 
    Agricultural extension specialist plays a vital role in serving as a bridging gap between agricultural research and farmers. They play a critical role in improving agricultural productivity, sustainability and rural development. Often time farmers face challenges like low yields, limited access to the markets, outdated farming methods, lack of modern technologies and facilities, climate adaption and soil health. This analysis helps to explore the relationship between agricultural production and market price trends using SQL based analysis. The focus is to uncover actionable insights by assessing crop profitability, market prices, crop yield evaluation across region by using a dataset containing FarmerAdvisor and MarketResearcher to support better data-driven decision making.
    
-# OBJECTIVE
+# 🧾 OBJECTIVE
 
   The main objective of this project is to analyze farmer and market data to uncover patterns in price trends, crop profitability, and advisor relationship. 
   Specifically, the goal is to;
@@ -13,14 +13,14 @@
 3. Classification of crop based on growth performance.
 4. Observe how many farmers fall under each growth category.
 
-# TOOLS USED
+# 🛠 TOOLS USED
 
 * Database: MySQL
 * CSV Files: Initial data sources.
 * Presentation and Report Tools: PowerPoint / Microsoft Word.
 * Data Cleaning: Derived missing fields using data analysis techniques like Data manipulation and logical grouping, Derived columns, CTEs, Window functions.
 
-# Methodology
+# ✍  Methodology
   The following steps and technique were applied to perform this analysis to generate insights for farmers and market researchers:
   
 ### 1. Data Preparation
@@ -31,7 +31,7 @@ ii. Imported and joined two primary datasets:
 
     * FarmerAdvisor (contains Farm_ID, Soil_pH, Soil_Moisture, Temperature_C, Rainfall_mm, Crop_Type, Fertilizer_Usage_kg, Pesticide_Usage_kg, Crop_Yield_ton, Sustainability_Score.
     
-    * MarketResearcher (contains Market_ID, Product, Market_Price_per_ton, Demand_Index, Supply_Index, Competitor_Price_per_ton, Economic_Indicator, Weather_Impact_Score,     Seasonal_Factor, Consumer_Trend_Index.
+    * MarketResearcher (contains Market_ID, Product, Market_Price_per_ton, Demand_Index, Supply_Index, Competitor_Price_per_ton, Economic_Indicator, Weather_Impact_Score, Seasonal_Factor, Consumer_Trend_Index.
     
 iii. Ensured consistency in all columns, checked for null or missing values, and aligned crop types and farm ID accurate JOIN operations.    
 
@@ -106,6 +106,49 @@ I began by adding a new season column:
 •	JOINs: interlinked rows across FarmerAdvisor and MarketResearcher for accurate analysis. joined tables using shared fields like Farm_ID, Crop_Type and location where applicable).
 
 •	Window Functions: Applied RANK (), ROW NUMBER (), DENSE_RANK ()) like: Ranking crops by market price per district, Finding the top and second-highest crop price per location, analyzing crop price trends over time (curated a PriceDate column).
+
+# 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
+  Here are some of the core findings based on key SQL questions:
+  
+Q1. Find the top 5 locations where the maximum number of farmers are associated with advisors.
+
+      SELECT farmer_advisor_dataset.Location AS Location, COUNT(*) AS Number_of_farmers
+      FROM farmer_advisor_dataset
+      GROUP BY Location
+      ORDER BY Number_of_farmers
+      LIMIT 5;
+ <img width="229" height="114" alt="1" src="https://github.com/user-attachments/assets/6b319f62-cf31-417e-998f-f51ba4e6688a" />
+ 
+Insight:
+Based on the analyses Location 2 recorded the highest number of farmers associated with advisors, followed closely by location 3, then 4, 5 and 1 respectively.
+This suggests effective agricultural extension systems and likely better access to farming guidance.
+
+Recommendation:
+•	Invest in logistics and distribution infrastructure in low-profit areas.
+•	Consider price regulation policies to support farmers in disadvantaged locations.
+
+Q2. For each crop type, calculate the average market price and sort in descending order.
+
+     SELECT market_researcher_dataset.Product AS Crop_Type, avg(market_researcher_dataset.Market_Price_per_ton) AS Average_Market_Price
+         FROM market_researcher_dataset
+         GROUP BY 1
+         ORDER BY 2 DESC;
+         
+ <img width="231" height="98" alt="2" src="https://github.com/user-attachments/assets/958358ca-5d97-4f38-ab44-ae69098adb74" />
+ 
+Insights:
+The analysis shows that Rice with average market price of 300.840 incurred the highest average market price, followed by corn, soybeans, and wheat. This pricing trend highlights rice as the most valuable crop in the dataset, which indicate significant opportunity for increased farmer income where conditions support its cultivation.
+Recommendation
+•	Encourage farmers to diversify into higher-price crops where feasible.
+•	Provide price trend reports to help farmers time the sale of their produce.
+
+Q3. Count how many unique crops each farmer is associated with.
+
+Insight:
+     No crop is uniquely associated with any single farmer. This means there’s a high overlap in crop choices, which lead to market saturation and price competition if supply excess demand.
+     Recommendation:
+•	Encourage farmers to grow crops that are in high demand locally or that they grow best, so they can earn more and face less competition.
+•	Provide training on multi-crop farming benefits.
 
 
 
