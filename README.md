@@ -111,7 +111,7 @@ I began by adding a new season column:
 # 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
   Here are some of the core findings based on key SQL questions:
   
-Q1. Find the top 5 locations where the maximum number of farmers are associated with advisors.
+### Q1. Find the top 5 locations where the maximum number of farmers are associated with advisors.
 
       SELECT farmer_advisor_dataset.Location AS Location, COUNT(*) AS Number_of_farmers
       FROM farmer_advisor_dataset
@@ -220,18 +220,21 @@ There is no evidence that all advisor guiding farmer grow the same crop in diffe
 
 Recommendation:
 
-•	Encourage farmers to spread crop production across different locations to reduce the risk of total loss from local issues like pests, bad weather, or price decline.
+* Encourage farmers to spread crop production across different locations to reduce the risk of total loss from local issues like pests, bad weather, or price decline.
 
-•	Build regional crop guides based on their insights.
+* Build regional crop guides based on their insights.
 
 Q7. Rank crops by profit per unit (assume: market price - average cost from FarmerAdvisor) using RANK ().
 
 Insight:
+
 Based on profit per unit (assume: market price - average cost), rice ranks the highest (₹494.14), followed by wheat, corn and soybeans. This highlights rice as a high-value crop.
 
 Recommendation:
-•	Promote profitable crops via targeted advisory services: Support rice farming, while helping farmers adopt practices that reduce production risks.
-•	Encourage cost management strategies to improve margins.
+
+* Promote profitable crops via targeted advisory services: Support rice farming, while helping farmers adopt practices that reduce production risks.
+  
+* Encourage cost management strategies to improve margins.
 
 Q8. Identify locations where the current market price of a crop is more than 20% above the average price of that crop across all locations.
 
