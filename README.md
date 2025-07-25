@@ -108,7 +108,7 @@ I began by adding a new season column:
 •	Window Functions: Applied RANK (), ROW NUMBER (), DENSE_RANK ()) like: Ranking crops by market price per district, Finding the top and second-highest crop price per location, analyzing crop price trends over time (curated a PriceDate column).
 
 
-## 🔍 KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
+## 🔍KEY INSIGHTS WITH DETAILED RECOMMENDATIONS;
   Here are some of the core findings based on key SQL questions:
   
 ### Q1. Find the top 5 locations where the maximum number of farmers are associated with advisors.
@@ -225,6 +225,19 @@ Recommendation:
 * Build regional crop guides based on their insights.
 
 ### Q7. Rank crops by profit per unit (assume: market price - average cost from FarmerAdvisor) using RANK ().
+
+	SELECT market_researcher_dataset.Product AS Crop_Type, market_researcher_dataset.Market_Price_per_ton AS Market_price,
+	farmer_advisor_dataset.Crop_Yield_ton AS Crop_yield,
+	-- Estimated cost: 10000 divided by yield
+	(10000 / farmer_advisor_dataset.Crop_Yield_ton) AS Estimated_cost_per_ton,
+	-- Estimated profit = price -cost
+	(market_researcher_dataset.Market_Price_per_ton - (10000 / farmer_advisor_dataset.Crop_Yield_ton)) AS Estimated_Profit_per_Unit,
+	RANK() OVER (ORDER BY (market_researcher_dataset.Market_Price_per_ton - (10000 / farmer_advisor_dataset.Crop_Yield_ton)) DESC) AS Profit_Rank
+	FROM market_researcher_dataset
+	JOIN farmer_advisor_dataset
+	ON Market_ID = Farm_ID;
+
+ <img width="612" height="203" alt="7" src="https://github.com/user-attachments/assets/7357eb8d-0fac-47c9-ba16-3aa269fdd6f7" />
 
 Insight:
 
