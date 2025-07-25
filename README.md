@@ -290,16 +290,36 @@ Recommendation:
 
 Q11. (Assume MarketResearcher has a PriceDate) — Use a window function to find the price change of each crop over the last 3 entries.
 
+	WITH RankedPrices AS (		
+	        SELECT market_researcher_dataset.Product AS Product, market_researcher_dataset.PriceDate AS PriceDate, 
+			market_researcher_dataset.Market_Price_per_ton AS Market_price_per_ton,
+	       ROW_NUMBER () OVER (PARTITION BY  Product ORDER BY Market_price_per_ton) AS rn
+	
+	FROM market_researcher_dataset
+	)
+	SELECT 
+	Product, PriceDate, Market_price_per_ton
+	FROM RankedPrices
+	WHERE rn <=3;
+
+ <img width="297" height="231" alt="11" src="https://github.com/user-attachments/assets/d944f26a-110a-4c0e-bdd2-45dc8be32297" />
+
 Insight:
+
 Each crop has experienced modest but meaningful price increases:
-•	Corn price rose from 100.0710, 100.0858 to 100.1295, marking a +0.0584%. This indicates a relatively stable market with slight upward changes.
-•	Rice price climbed from moving from 100.2718, 100.3950 to 100.4308, indicating a +0.1589% increase, which may include heightened demand.
-•	Soybean increased from 100.0683, 100.16340 to 100.2554, translating to a +0.1871% rise.
-•	Wheat saw the highest shift 100.03762, 100.330225 to 100.5558 at a +0.5182% gain. This growth may reflect improved demand.
+
+* Corn price rose from 100.0710, 100.0858 to 100.1295, marking a +0.0584%. This indicates a relatively stable market with slight upward changes.
+
+* Rice price climbed from moving from 100.2718, 100.3950 to 100.4308, indicating a +0.1589% increase, which may include heightened demand.
+
+* Soybean increased from 100.0683, 100.16340 to 100.2554, translating to a +0.1871% rise.
+
+* Wheat saw the highest shift 100.03762, 100.330225 to 100.5558 at a +0.5182% gain. This growth may reflect improved demand.
 
 Recommendation:
-•	Develop dashboards or SMS alerts for real-time price tracking.
-•	Help farmers time their sales using trend data.
+
+* Develop dashboards or SMS alerts for real-time price tracking.
+* Help farmers time their sales using trend data.
 
 Q12. Create a new column that classifies crop growth rate as:
     - Low (<20%)
@@ -342,18 +362,59 @@ Recommendation:
 
 Q13. Join the tables and display all farmers whose crop is sold in the same district at the highest price.
 
+		    market_researcher_dataset.Location AS Location,
+		    MAX(market_researcher_dataset.Market_Price_per_ton) AS Max_Price
+		  FROM market_researcher_dataset
+		  GROUP BY Crop, Location)
+		SELECT fa.Farm_ID, fa.Crop_Type, fa.Crop_Yield_ton, fa.Location, mr.Market_Price_per_ton
+		FROM farmer_advisor_dataset fa
+		JOIN market_researcher_dataset mr
+		  ON fa.Crop_Type = mr.Product
+		  AND fa.Location = mr.Location
+		JOIN HighestPricePerCropDistrict mp
+		  ON mr.Product = mp.Crop
+		  AND mr.Location = mp.Location
+		  AND mr.Market_Price_per_ton = mp.Max_Price;
+
+   <img width="438" height="198" alt="13" src="https://github.com/user-attachments/assets/e76733b4-c249-424d-9884-d49145191a2c" />
+Insight:
+
 Recommendation:
-Identify and replicate their selling strategies.
-Promote better aggregation or storage options for others.
+
+* Identify and replicate their selling strategies.
+* Promote better aggregation or storage options for others.
 
 Q14. For each advisor, count how many of their farmers grow crops that fall under the “High” growth classification (from Q12).
 
+		WITH GrowthRates AS (
+			SELECT farmer_advisor_dataset.Farm_ID AS Farm_ID, farmer_advisor_dataset.Crop_Type, farmer_advisor_dataset.Crop_Yield_ton,
+			 (farmer_advisor_dataset.Crop_Yield_ton / AVG(farmer_advisor_dataset.Crop_Yield_ton) OVER()) * 100 AS Crop_Growth_Rate
+		 FROM farmer_advisor_dataset   
+		 ),
+		 Classified AS (
+		 SELECT *,
+		     CASE
+		        WHEN Crop_Growth_Rate < 20 THEN 'Low'
+		        WHEN Crop_growth_rate BETWEEN 20 AND 50 THEN 'Medium'
+		        ELSE 'High'
+		        END AS Growth_classification
+		        FROM GrowthRates
+		 )
+		 SELECT COUNT(DISTINCT farm_ID) AS High_Growth_Farmer
+		 FROM Classified
+		 WHERE Growth_classification = 'High';
+
+ <img width="160" height="56" alt="14" src="https://github.com/user-attachments/assets/9d08e29e-cd0d-41af-9bc8-aed933cd8b52" />
+    
 Insight:
+
 A total of 8,051 farmers is cultivating crops classified as “High Growth”, which reflects a strong adoption of well-performing crops, productivity, and yield value.
 
 Recommendation:
-•	  Recognize and scale advisor success through peer training.
-•	Assign underperforming farmers to these high-impact advisors.
+
+* Recognize and scale advisor success through peer training.
+  
+* Assign underperforming farmers to these high-impact advisors.
 
 Q15. Identify if any farmer has duplicate crop entries.
       
@@ -560,5 +621,7 @@ This analysis explored 20 focused data queries on farmer practices, advisor supp
 
 Improving agricultural outcomes requires strengthening farmerAdvisor relationships, promoting crop rotation and diversification, and using real-time data. High value crops offer profits but need market access strategies to avoid risk. Filling data gaps and expanding advisory services will support smarter, evidence-based planning. With coordinated action across policy, technology, and local engagement, farmers can achieve better yields, reduced risk, and sustainable livelihoods in a rapidly changing agricultural landscape.
 
+
+![Thank you](https://github.com/user-attachments/assets/b51cee4e-1004-4c19-99db-98df7b48bdb9)
 
    
