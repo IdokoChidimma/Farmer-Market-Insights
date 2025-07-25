@@ -90,15 +90,14 @@ I began by adding a new season column:
                   ALTER TABLE FarmerAdvisor
                   ADD COLUMN Season VARCHAR (50);
                   Then we updated the column based on climate thresholds:
-                  UPDATE FarmerAdvisor
 		  UPDATE farmer_advisor_dataset
 		  SET Season = CASE
-		    WHEN farmer_advisor_dataset.Rainfall_mm > 150 THEN 'Rainy'
-		    WHEN farmer_advisor_dataset.Rainfall_mm < 60 THEN 'Dry'
-		    WHEN farmer_advisor_dataset.Temperature_C > 40 THEN 'Hot'
-		    WHEN farmer_advisor_dataset.Temperature_C BETWEEN 20 AND 30 THEN 'Mild'
-		    ELSE 'Unknown'
-		    END;
+		     WHEN farmer_advisor_dataset.Rainfall_mm > 150 THEN 'Rainy'
+		     WHEN farmer_advisor_dataset.Rainfall_mm < 60 THEN 'Dry'
+		     WHEN farmer_advisor_dataset.Temperature_C > 40 THEN 'Hot'
+		     WHEN farmer_advisor_dataset.Temperature_C BETWEEN 20 AND 30 THEN 'Mild'
+		     ELSE 'Unknown'
+		     END;
       
                                
 ### 3. Used SQL Techniques (CTEs, JOINS, Window Functions)
