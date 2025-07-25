@@ -91,13 +91,15 @@ I began by adding a new season column:
                   ADD COLUMN Season VARCHAR (50);
                   Then we updated the column based on climate thresholds:
                   UPDATE FarmerAdvisor
-                  SET Season = CASE
-                            WHEN Temperature >30 AND Rainfall < 50 THEN ‘Dry’
-                            WHEN Temperature BETWEEN 20 AND 30 
-                           AND Rainfall BETWEEN 50 AND 150 THEN ‘Mid-Season’                                                        
-                            WHEN Temperature <20 AND Rainfall >150 THEN ‘Rainy’
-                            ELSE ‘Unknown’
-                               END;
+		  UPDATE farmer_advisor_dataset
+		  SET Season = CASE
+		    WHEN farmer_advisor_dataset.Rainfall_mm > 150 THEN 'Rainy'
+		    WHEN farmer_advisor_dataset.Rainfall_mm < 60 THEN 'Dry'
+		    WHEN farmer_advisor_dataset.Temperature_C > 40 THEN 'Hot'
+		    WHEN farmer_advisor_dataset.Temperature_C BETWEEN 20 AND 30 THEN 'Mild'
+		    ELSE 'Unknown'
+		    END;
+      
                                
 ### 3. Used SQL Techniques (CTEs, JOINS, Window Functions)
 
@@ -623,11 +625,11 @@ Proposed Actions:
 
 ## CHALLENGES FACED
 
-1. Missing Key Columns: The dataset lacked essential fields like Location, Season, Advisor_ID, and PriceDate, which made direct analysis impossible. I had to manipulate these columns using assumptions, proxies, and logical inferences.
+* Missing Key Columns: The dataset lacked essential fields like Location, Season, Advisor_ID, and PriceDate, which made direct analysis impossible. I had to manipulate these columns using assumptions, proxies, and logical inferences.
+
+* Inconsistent Farmer Records: Some farmers appeared to switch crops or had multiple entries without clear pattern. This required careful aggregation and consistency checks, especially for profit tracking.
    
-2. Inconsistent Farmer Records: Some farmers appeared to switch crops or had multiple entries without clear pattern. This required careful aggregation and consistency checks, especially for profit tracking.
-   
-3. Unrealistic Date Values: The PriceDate field contained future years like 2036-2049. I resolved this by generating realistic sequential dates using ROW_NUMBER () and DATE_SUB () from a 2024 baseline.
+* Unrealistic Date Values: The PriceDate field contained future years like 2036-2049. I resolved this by generating realistic sequential dates using ROW_NUMBER () and DATE_SUB () from a 2024 baseline.
    
 ## SUMMARY
 
